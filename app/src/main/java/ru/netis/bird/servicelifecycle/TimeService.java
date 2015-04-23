@@ -37,9 +37,10 @@ public class TimeService extends Service {
     public int onStartCommand(Intent intent, int flags, int startId) {
         super.onCreate();
         Toast.makeText(getApplicationContext(), "onCreate", Toast.LENGTH_SHORT).show();
+        count = 0;
         // cancel if already existed
         if (mTimer != null) {
-            mTimer.cancel();
+//            mTimer.cancel();
         } else {
             // recreate new
             mTimer = new Timer();
@@ -53,7 +54,6 @@ public class TimeService extends Service {
 
     @Override
     public void onCreate() {
-        count = 0;
     }
 
     @Override
@@ -77,7 +77,7 @@ public class TimeService extends Service {
                     // display toast
                     Toast.makeText(getApplicationContext(), getDateTime() + " count=" + count,
                             Toast.LENGTH_SHORT).show();
-                    if (++count >= 5) {
+                    if (++count >= 50) {
                         stopSelf();
                     }
                 }
