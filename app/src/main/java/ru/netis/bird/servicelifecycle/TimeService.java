@@ -37,14 +37,7 @@ public class TimeService extends Service {
 
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
-        Toast.makeText(getApplicationContext(), "onStartCommand", Toast.LENGTH_SHORT).show();
         Log.d(LOG_TAG, "onStartCommand ");
-        return super.onStartCommand(intent, flags, startId);
-    }
-
-    @Override
-    public void onCreate() {
-        Log.d(LOG_TAG, "onCreate ");
         super.onCreate();
         // cancel if already existed
         if (mTimer != null) {
@@ -53,9 +46,16 @@ public class TimeService extends Service {
             // recreate new
             mTimer = new Timer();
         }
+        long interval = intent.getLongExtra(MainActivity.NEW_INTERVAL, NOTIFY_INTERVAL);
+        Toast.makeText(getApplicationContext(), "onStartCommand: interval = " + interval, Toast.LENGTH_SHORT).show();
         // schedule task
-        mTimer.scheduleAtFixedRate(new TimeDisplayTimerTask(), 0,
-                NOTIFY_INTERVAL);
+        mTimer.scheduleAtFixedRate(new TimeDisplayTimerTask(), 0, interval);
+        return START_STICKY;
+    }
+
+    @Override
+    public void onCreate() {
+        Log.d(LOG_TAG, "onCreate ");
     }
 
     @Override
