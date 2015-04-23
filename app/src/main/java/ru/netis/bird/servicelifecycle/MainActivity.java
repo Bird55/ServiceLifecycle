@@ -23,6 +23,11 @@ public class MainActivity extends ActionBarActivity {
         editText.setText(Long.toString(TimeService.NOTIFY_INTERVAL));
     }
 
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        stopService(new Intent(MainActivity.this, TimeService.class));
+    }
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
@@ -53,7 +58,7 @@ public class MainActivity extends ActionBarActivity {
                 // используем явный вызов службы
                 long interval = Long.valueOf(editText.getText().toString());
                 Intent intent = new Intent(MainActivity.this, TimeService.class);
-                intent.getLongExtra(NEW_INTERVAL, interval);
+                intent.putExtra(NEW_INTERVAL, interval);
                 startService(intent);
                 break;
             case R.id.btnStop:

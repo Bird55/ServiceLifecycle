@@ -20,6 +20,9 @@ public class TimeService extends Service {
     // constant
     public static final long NOTIFY_INTERVAL = 30 * 1000; // 30 seconds
 
+    //
+    private int count;
+
     // run on another Thread to avoid crash
     private Handler mHandler = new Handler();
     // timer handling
@@ -55,6 +58,7 @@ public class TimeService extends Service {
 
     @Override
     public void onCreate() {
+        count = 0;
         Log.d(LOG_TAG, "onCreate ");
     }
 
@@ -78,8 +82,11 @@ public class TimeService extends Service {
                 @Override
                 public void run() {
                     // display toast
-                    Toast.makeText(getApplicationContext(), getDateTime(),
+                    Toast.makeText(getApplicationContext(), getDateTime() + " count=" + count,
                             Toast.LENGTH_SHORT).show();
+                    if (++count >= 5) {
+                        stopSelf();
+                    }
                 }
             });
         }
