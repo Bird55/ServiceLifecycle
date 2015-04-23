@@ -4,7 +4,6 @@ import android.app.Service;
 import android.content.Intent;
 import android.os.Handler;
 import android.os.IBinder;
-import android.util.Log;
 import android.widget.Toast;
 
 import java.text.SimpleDateFormat;
@@ -14,8 +13,6 @@ import java.util.Timer;
 import java.util.TimerTask;
 
 public class TimeService extends Service {
-    
-    private static final String LOG_TAG = "myLog";
 
     // constant
     public static final long NOTIFY_INTERVAL = 30 * 1000; // 30 seconds
@@ -26,26 +23,23 @@ public class TimeService extends Service {
     private Timer mTimer = null;
 
     public TimeService() {
-        Log.d(LOG_TAG, "TimeService constructor");
     }
 
     @Override
     public IBinder onBind(Intent intent) {
-        Log.d(LOG_TAG, "onBind ");
         return null;
     }
 
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
         Toast.makeText(getApplicationContext(), "onStartCommand", Toast.LENGTH_SHORT).show();
-        Log.d(LOG_TAG, "onStartCommand ");
         return super.onStartCommand(intent, flags, startId);
     }
 
     @Override
     public void onCreate() {
-        Log.d(LOG_TAG, "onCreate ");
         super.onCreate();
+        Toast.makeText(getApplicationContext(), "onCreate", Toast.LENGTH_SHORT).show();
         // cancel if already existed
         if (mTimer != null) {
             mTimer.cancel();
@@ -61,7 +55,6 @@ public class TimeService extends Service {
     @Override
     public void onDestroy() {
         Toast.makeText(getApplicationContext(), "onDestroy", Toast.LENGTH_SHORT).show();
-        Log.d(LOG_TAG, "onDestroy ");
         super.onDestroy();
         if (mTimer != null) {
             mTimer.cancel();
