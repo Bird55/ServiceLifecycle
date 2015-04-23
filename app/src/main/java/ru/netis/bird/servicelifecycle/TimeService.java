@@ -17,6 +17,9 @@ public class TimeService extends Service {
     // constant
     public static final long NOTIFY_INTERVAL = 30 * 1000; // 30 seconds
 
+    //
+    private int count;
+
     // run on another Thread to avoid crash
     private Handler mHandler = new Handler();
     // timer handling
@@ -32,12 +35,6 @@ public class TimeService extends Service {
 
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
-        Toast.makeText(getApplicationContext(), "onStartCommand", Toast.LENGTH_SHORT).show();
-        return super.onStartCommand(intent, flags, startId);
-    }
-
-    @Override
-    public void onCreate() {
         super.onCreate();
         Toast.makeText(getApplicationContext(), "onCreate", Toast.LENGTH_SHORT).show();
         // cancel if already existed
@@ -47,9 +44,16 @@ public class TimeService extends Service {
             // recreate new
             mTimer = new Timer();
         }
+        long interval = intent.getLongExtra(MainActivity.NEW_INTERVAL, NOTIFY_INTERVAL);
+        Toast.makeText(getApplicationContext(), "onStartCommand: interval = " + interval, Toast.LENGTH_SHORT).show();
         // schedule task
-        mTimer.scheduleAtFixedRate(new TimeDisplayTimerTask(), 0,
-                NOTIFY_INTERVAL);
+        mTimer.scheduleAtFixedRate(new TimeDisplayTimerTask(), 0, interval);
+        return START_STICKY;
+    }
+
+    @Override
+    public void onCreate() {
+        count = 0;
     }
 
     @Override
@@ -71,8 +75,11 @@ public class TimeService extends Service {
                 @Override
                 public void run() {
                     // display toast
-                    Toast.makeText(getApplicationContext(), getDateTime(),
+                    Toast.makeText(getApplicationContext(), getDateTime() + " count=" + count,
                             Toast.LENGTH_SHORT).show();
+                    if (++count >= 5) {
+                        stopSelf();
+                    }
                 }
             });
         }
